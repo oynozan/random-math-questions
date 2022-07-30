@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="container">
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const o = ["+", "-"];
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
+
+        function answerFunc(operation, n1, n2) {
+            let answer_;
+            switch(operation) {
+                case "+":
+                    answer_ = n1 + n2;
+                    break;
+                case "-":
+                    answer_ = n1 - n2;
+                    break;
+            }
+            return answer_;
+        }
+
+        function generateRandomQuestion() {
+
+            let firstNum = Math.floor(Math.random() * 90 + 10);
+            let secondNum = Math.floor(Math.random() * 90 + 10) + 1;
+
+            let operation = o[Math.floor(Math.random() * o.length)];
+
+            let question = `${firstNum} ${operation} ${secondNum} = ?`;
+            let answer = answerFunc(operation, firstNum, secondNum);
+
+            let answers = [answer, 
+                Math.floor(Math.random() * 90 + 10),
+                Math.floor(Math.random() * 90 + 10),
+                Math.floor(Math.random() * 90 + 10),
+                Math.floor(Math.random() * 90 + 10)
+            ];
+
+            answers = shuffleArray(answers);
+
+            const questionID = Math.random().toString(36).substr(2, 9);
+
+            $(".container").append(
+                `
+                <div class="question ${questionID}">
+                    <p>${question}</p>
+                    <div class="answers">
+                        <button class="${questionID}">${answers[0]}</button>
+                        <button class="${questionID}">${answers[1]}</button>
+                        <button class="${questionID}">${answers[2]}</button>
+                        <button class="${questionID}">${answers[3]}</button>
+                        <button class="${questionID}">${answers[4]}</button>
+                    </div>
+                </div>
+                `
+            );
+        }
+
+        for (let i = 0; i < 50; i++) {
+            generateRandomQuestion();
+        }
+
+        $("button").on("click", function(e) {
+            let selectedAns = $(e.target).text();
+            let selectedID = $(e.target).attr("class");
+
+            let question = $("div."+selectedID).find("p").text();
+            let items = question.split(" ");
+
+            let n1 = items[0], o = items[1], n2 = items[2];
+
+            let answer = answerFunc(o, parseInt(n1), parseInt(n2));
+
+            if (parseInt(answer) == parseInt(selectedAns)) {
+                $(e.target).css("background-color", "green");
+            } else {
+                $(e.target).css("background-color", "red");
+            }
+        });
+    </script>
+</body>
+</html>
